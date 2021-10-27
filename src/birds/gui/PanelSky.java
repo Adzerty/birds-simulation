@@ -10,6 +10,7 @@ import java.awt.Graphics;
 
 import birds.metier.Bird;
 import birds.metier.FlyingObject;
+import birds.metier.Obstacle;
 
 public class PanelSky extends JPanel {
 	
@@ -21,12 +22,20 @@ public class PanelSky extends JPanel {
 		
 		this.s = s;
 		
-		int sF = Sky.SIZE_FRAME/8;
+		int spawnBird = Sky.SIZE_FRAME/8;
+		int spawnObs = Sky.SIZE_FRAME/2;
 		for(int i = 0; i < s.getNbOiseaux(); i++) {
-			flyingObjects.add(new Bird( (-sF +  (int)(Math.random() * (sF + sF))), 
-										(-sF +  (int)(Math.random() * (sF + sF))),
+			flyingObjects.add(new Bird( (-spawnBird +  (int)(Math.random() * (spawnBird + spawnBird))), 
+										(-spawnBird +  (int)(Math.random() * (spawnBird + spawnBird))),
 										s));
 			
+		}
+		
+		for(int i = 0; i<s.getNbObstacles(); i++) {
+			flyingObjects.add(new Obstacle( (-spawnObs +  (int)(Math.random() * (spawnObs + spawnObs))), 
+											(-spawnObs +  (int)(Math.random() * (spawnObs + spawnObs))),
+											(Obstacle.SIZE_MIN +  (int)(Math.random() * (Obstacle.SIZE_MAX - Obstacle.SIZE_MIN))),
+											s));
 		}
 		
 		
@@ -49,18 +58,18 @@ public class PanelSky extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		g.drawRect(0,0,Sky.SIZE_FRAME,Sky.SIZE_FRAME);
+		//g.drawRect(0,0,Sky.SIZE_FRAME,Sky.SIZE_FRAME);
 		
 		
 		
 		for(FlyingObject fO : flyingObjects) {
-			if(fO == flyingObjects.get(0))
+			if(fO instanceof Obstacle)
 				g.setColor(Color.red);
 			else 
 				g.setColor(Color.black);
 			
 			
-			g.fillOval((int)fO.getX()+Sky.SIZE_FRAME/2, (int)fO.getY()+Sky.SIZE_FRAME/2, fO.getSize(), fO.getSize());
+			g.fillOval((int)(fO.getX()+Sky.SIZE_FRAME/2), (int)(fO.getY()+Sky.SIZE_FRAME/2), fO.getSize(), fO.getSize());
 		}
 		
 		

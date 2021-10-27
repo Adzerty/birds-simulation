@@ -11,6 +11,7 @@ import birds.metier.Bird;
 
 public class Sky extends JFrame {
 	
+	
 	public static final int SIZE_FRAME = 600;
 	
 	private PanelSky panel;
@@ -78,6 +79,10 @@ public class Sky extends JFrame {
 		return nbOiseaux;
 	}
 	
+	public int getNbObstacles() {
+		return nbObstacles;
+	}
+	
 	// Methods metier
 	public List<Bird> getVoisins(double x, double y){
 		
@@ -101,12 +106,11 @@ public class Sky extends JFrame {
 	}
 	
 	public boolean isInConfortZone(double x, double y) {
+		int sF = SIZE_FRAME/2;
 		for(FlyingObject fO : panel.flyingObjects) {
 			if(fO.getX() != x && fO.getY() != y) {
-				if( (x - fO.getX()) * (x - fO.getX()) +
-			        (y - fO.getY()) * (y - fO.getY()) <= 
-			        Bird.CONFORT_ZONE * Bird.CONFORT_ZONE) {
-					
+				if(intersect(fO.getX()+sF, fO.getY()+sF, x+sF, y+sF, Bird.BIRD_SIZE/2, fO.getSize()/2)) 
+				{	
 					return true;
 				}				
 			
@@ -114,5 +118,18 @@ public class Sky extends JFrame {
 		}
 		
 		return false;
+	}
+	
+	private boolean intersect(double x1, double y1, double x2,
+			double y2, int r1, int r2)
+	{
+		double distSq = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+		double radSumSq = (r1 + r2) * (r1 + r2);
+		
+		if (distSq <= radSumSq)
+		  return true;
+
+		 return false;
+
 	}
 }

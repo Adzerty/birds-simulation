@@ -12,9 +12,9 @@ import birds.gui.Sky;
 public class Bird extends FlyingObject {
 	
 	public static final int NB_BIRD_TO_FOLLOW = 7; 	// le nombre d'oiseaux que suit cet oiseau
-	public static final int FIELD_OF_VIEW = 20; 	// le champ de vision de l'oiseau (permet de chercher les voisins)
-	public static final int CONFORT_ZONE = 4; 		// zone de confort de l'oiseau, pour ne pas qu'il se chevauche
-	public static final int SPEED = 10;
+	public static final int FIELD_OF_VIEW = 25; 	// le champ de vision de l'oiseau (permet de chercher les voisins)
+	public static final int CONFORT_ZONE = 1; 		// zone de confort de l'oiseau, pour ne pas qu'il se chevauche
+	public static final int SPEED = 20;
 	
 	float angle;
     
@@ -63,7 +63,7 @@ public class Bird extends FlyingObject {
 		do {
 			//System.out.println(" NBITER " + nbIter + " : ANGLE " + angle);
 			if(nbIter > 0) {
-				angle = (angle + ((Math.random()==0)? 10 : -10));
+				angle = (angle + ((Math.random()>0.5)? 10 : -10));
 			}
 			
 	
@@ -81,7 +81,7 @@ public class Bird extends FlyingObject {
 	        
 	         isInConfort = sky.isInConfortZone(x,y);
 	         //System.out.println(isInConfort);
-		}while(false);
+		}while(isInConfort);
 
 
         

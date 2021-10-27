@@ -21,10 +21,10 @@ public class PanelSky extends JPanel {
 		
 		this.s = s;
 		
-		int sF2 = Sky.SIZE_FRAME/2;
+		int sF = Sky.SIZE_FRAME/8;
 		for(int i = 0; i < s.getNbOiseaux(); i++) {
-			flyingObjects.add(new Bird( (-sF2 +  (int)(Math.random() * (sF2 + sF2))), 
-										(-sF2 +  (int)(Math.random() * (sF2 + sF2))),
+			flyingObjects.add(new Bird( (-sF +  (int)(Math.random() * (sF + sF))), 
+										(-sF +  (int)(Math.random() * (sF + sF))),
 										s));
 			
 		}

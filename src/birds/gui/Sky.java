@@ -11,7 +11,7 @@ import birds.metier.Bird;
 
 public class Sky extends JFrame {
 	
-	public static final int SIZE_FRAME = 500;
+	public static final int SIZE_FRAME = 600;
 	
 	private PanelSky panel;
 	
@@ -57,7 +57,7 @@ public class Sky extends JFrame {
 					panel.update();
 					
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -79,11 +79,11 @@ public class Sky extends JFrame {
 	}
 	
 	// Methods metier
-	public List<Bird> getVoisins(int x, int y){
+	public List<Bird> getVoisins(double x, double y){
 		
 		List<Bird> lVoisins = new ArrayList<>();
 		for(FlyingObject fO : panel.flyingObjects) {
-			if(fO instanceof Bird) {
+			if(fO instanceof Bird && fO.getX() != x && fO.getY() != y) {
 				
 				if( (fO.getX() - x) * (fO.getX() - x) +
 			        (fO.getY() - y) * (fO.getY() - y) <= 
@@ -100,7 +100,7 @@ public class Sky extends JFrame {
 		return lVoisins;
 	}
 	
-	public boolean isInConfortZone(int x, int y) {
+	public boolean isInConfortZone(double x, double y) {
 		for(FlyingObject fO : panel.flyingObjects) {
 			
 			if( (x - fO.getX()) * (x - fO.getX()) +

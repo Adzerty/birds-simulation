@@ -21,9 +21,10 @@ public class PanelSky extends JPanel {
 		
 		this.s = s;
 		
+		int sF2 = Sky.SIZE_FRAME/2;
 		for(int i = 0; i < s.getNbOiseaux(); i++) {
-			flyingObjects.add(new Bird( (int)( -Sky.SIZE_FRAME/2 + (Math.random() * ( Sky.SIZE_FRAME/2 + Sky.SIZE_FRAME/2))), 
-										(int)( -Sky.SIZE_FRAME/2 + (Math.random() * ( Sky.SIZE_FRAME/2 + Sky.SIZE_FRAME/2))),
+			flyingObjects.add(new Bird( (-sF2 +  (int)(Math.random() * (sF2 + sF2))), 
+										(-sF2 +  (int)(Math.random() * (sF2 + sF2))),
 										s));
 			
 		}
@@ -35,10 +36,11 @@ public class PanelSky extends JPanel {
 	//Each flying object should call its fly method and the panel is repainted;
 	public void update() {
 		
-		flyingObjects.get(0).fly();
-		/*for(FlyingObject fO : flyingObjects) {
+		//flyingObjects.get(0).fly();
+		for(FlyingObject fO : flyingObjects) {
 			fO.fly();
-		}*/
+		}
+		
 		
 		repaint();
 	}
@@ -47,11 +49,18 @@ public class PanelSky extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		g.setColor(Color.red);
+		g.drawRect(0,0,Sky.SIZE_FRAME,Sky.SIZE_FRAME);
+		
+		
 		
 		for(FlyingObject fO : flyingObjects) {
-			//System.out.println(fO.getX() + " : " + fO.getY() );
-			g.fillOval(fO.getX()+Sky.SIZE_FRAME/2, fO.getY()+Sky.SIZE_FRAME/2, fO.getSize(), fO.getSize());
+			if(fO == flyingObjects.get(0))
+				g.setColor(Color.red);
+			else 
+				g.setColor(Color.black);
+			
+			
+			g.fillOval((int)fO.getX()+Sky.SIZE_FRAME/2, (int)fO.getY()+Sky.SIZE_FRAME/2, fO.getSize(), fO.getSize());
 		}
 		
 		

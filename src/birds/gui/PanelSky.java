@@ -40,11 +40,13 @@ public class PanelSky extends JPanel {
 	
 	
 	public void paintComponent(Graphics g) {
-		
+		super.paintComponent(g);
 		
 		for(FlyingObject fO : flyingObjects) {
 			g.fillOval(fO.getX()+Sky.SIZE_FRAME/2, fO.getY()+Sky.SIZE_FRAME/2, fO.getSize(), fO.getSize());
 		}
+		
+		
 		
         
     }

@@ -62,12 +62,6 @@ public class Bird extends FlyingObject {
 		//On déplace l'oiseau
 		int nbIter = 0;
 		
-		do {
-		
-		if(nbIter > 0) {
-			angle = angle + Math.random()==0?5:-5;
-		}
-		
 		if(vitesse.calculNormeAvecDeuxValeurs( //On verifie que la vitesse ne depassera pas la vitesse max
                 vitesse.getvX() + acceleration * Math.cos(Math.toRadians(angle)),
                 vitesse.getvY()) + acceleration * Math.sin(Math.toRadians(angle))
@@ -81,8 +75,29 @@ public class Bird extends FlyingObject {
         x = (int) (x + (vitesse.getvX() * deltaT));
         y = (int) (y + (vitesse.getvY() * deltaT));
         nbIter++;
+		
+		/*do {
+			if(nbIter > 0) {
+				angle = angle + ((Math.random()==0)? 10 : -10);
+				//System.out.println(angle);
+			}
+			
+			if(vitesse.calculNormeAvecDeuxValeurs( //On verifie que la vitesse ne depassera pas la vitesse max
+	                vitesse.getvX() + acceleration * Math.cos(Math.toRadians(angle)),
+	                vitesse.getvY()) + acceleration * Math.sin(Math.toRadians(angle))
+	                < MAX_VITESSE )
+	        {
+	            vitesse.setvX(vitesse.getvX() + acceleration * Math.cos(Math.toRadians(angle)));
+	            vitesse.setvY(vitesse.getvY() + acceleration * Math.sin(Math.toRadians(angle)));
+	        }
+	
+	        //On calcul la nouvelle position
+	        x = (int) (x + (vitesse.getvX() * deltaT));
+	        y = (int) (y + (vitesse.getvY() * deltaT));
+	        nbIter++;
         
-		}while(sky.isInConfortZone(x,y));
+		}while(sky.isInConfortZone(x,y) false);
+		*/
 
         //Calcul d'un nouveau vecteur permettant la deceleration
         Vecteur vitInit = new Vecteur(vitesse.getvX(), vitesse.getvY());

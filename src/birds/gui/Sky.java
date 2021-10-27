@@ -57,7 +57,7 @@ public class Sky extends JFrame {
 					panel.update();
 					
 					try {
-						Thread.sleep(10);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -103,8 +103,8 @@ public class Sky extends JFrame {
 	public boolean isInConfortZone(int x, int y) {
 		for(FlyingObject fO : panel.flyingObjects) {
 			
-			if( (fO.getX() - x) * (fO.getX() - x) +
-		        (fO.getY() - y) * (fO.getY() - y) <= 
+			if( (x - fO.getX()) * (x - fO.getX()) +
+		        (y - fO.getY()) * (y - fO.getY()) <= 
 		        Bird.CONFORT_ZONE * Bird.CONFORT_ZONE) {
 				
 				return true;

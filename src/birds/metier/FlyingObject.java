@@ -1,7 +1,10 @@
-package birds;
+package birds.metier;
+
+import birds.gui.Sky;
 
 public abstract class FlyingObject {
-	int x, y;
+	int x, y, size;
+	Sky sky;
 	
 	public int getX() {
 		return x;
@@ -9,6 +12,10 @@ public abstract class FlyingObject {
 	
 	public int getY() {
 		return y;
+	}
+	
+	public int getSize() {
+		return size;
 	}
 	
 	public void setX(int x) {
@@ -19,7 +26,6 @@ public abstract class FlyingObject {
 		this.y = y;
 	}
 	
-	private FlyingObject() {
-		// TODO Auto-generated constructor stub
-	}
+	
+	public abstract void fly();
 }

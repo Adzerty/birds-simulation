@@ -13,8 +13,10 @@ public class Bird extends FlyingObject {
 	
 	public static final int BIRD_SIZE = 4;
 	public static final int NB_BIRD_TO_FOLLOW = 7; 	// le nombre d'oiseaux que suit cet oiseau
-	public static final int FIELD_OF_VIEW = 25; 	// le champ de vision de l'oiseau (permet de chercher les voisins)
+	public static final int FIELD_OF_VIEW = 50; 	// le champ de vision de l'oiseau (permet de chercher les voisins)
 	public static final int CONFORT_ZONE = 1; 		// zone de confort de l'oiseau, pour ne pas qu'il se chevauche
+	public static final int OBSTACLE_ZONE = 75; 	// zone de confort de l'oiseau, pour ne pas qu'il se chevauche
+	
 	public static final int SPEED = 10;
 	
 	float angle;
@@ -23,16 +25,30 @@ public class Bird extends FlyingObject {
     private double deltaT;
     private double tpsDebut;
     private double tpsFin = System.currentTimeMillis();
+    private double vitesse = SPEED; 
+    private boolean obstacle = false;
     
 
 	public Bird(int x, int y, Sky s) {
-		this.x = x;
-		this.y = y;
+		v = new Vecteur(new Point(x,y), new Point(x+1, y+1));
 		this.angle = (float) (Math.random() * (360));
 		this.size = BIRD_SIZE;
 		
 		this.sky = s;
 		
+	}
+	@Override
+	public void setX(double x) {
+		this.v.setA(new Point(x, v.getA().getY()));
+		this.v.setB(new Point(	Math.cos(Math.toRadians(angle)) * v.getNorme() + v.getA().getX(), 
+				  				Math.sin(Math.toRadians(angle)) * v.getNorme() + v.getA().getY()));
+	}
+	
+	@Override
+	public void setY(double y) {
+		this.v.setA(new Point(v.getA().getX(), y ));
+		this.v.setB(new Point(	Math.cos(Math.toRadians(angle)) * v.getNorme() + v.getA().getX(), 
+				  				Math.sin(Math.toRadians(angle)) * v.getNorme() + v.getA().getY()));
 	}
 	
 	@Override
@@ -40,72 +56,91 @@ public class Bird extends FlyingObject {
 		
 		tpsDebut = System.currentTimeMillis();
         deltaT = (tpsDebut - tpsFin)/SPEED;
-        
-		//On regarde ses 7 voisins
-		List<Bird> lVoisins = sky.getVoisins(x,y);
 		
-		//On fait la moyenne des angles des voisins et du sien et on l'affecte à l'oiseau courant
-		float angleTot = angle;
-		for(Bird b : lVoisins) {
-			//System.out.println(lVoisins.size());
-			angleTot+=b.angle;
-		}
 		
-		angle = (angleTot/(lVoisins.size()+1))%360;		
 
-		
-		
-		
-		
-		//TODO On verifie s'il y a un obstacle 
 		//On déplace l'oiseau
 		int nbIter = 0;
-		boolean isInConfort;
+		FlyingObject fOInConfort = sky.isInConfortZone(getX(), getY(), size);
+		vitesse = SPEED;
 		
-		do {
-			//System.out.println(" NBITER " + nbIter + " : ANGLE " + angle);
-			if(nbIter > 0) {
-				angle = (angle + ((Math.random()>0.5)? 45 : -45))%360;
+		if(fOInConfort != null){
+			if(fOInConfort instanceof Obstacle)
+			{
+				if(! obstacle)
+				{
+					obstacle = true;
+					// On trace le segment entre l'oiseau et l'obstacle
+					// On regarde l'angle entre la direction de l'oiseau et la droite
+					// Si l'angle est < à 90 on tourne de X degres (X = a * 1/longueur du segment)
+					//double tetha = v.getAngleBetweenVector(fOInConfort.getV());
+					
+					Vecteur vOiseauObstacle = new Vecteur(new Point(getX(), getY()), new Point(fOInConfort.getX(), fOInConfort.getY())); 
+					
+					double oppose = vOiseauObstacle.getB().getY() <  v.getB().getY() ? vOiseauObstacle.getB().getY() - v.getB().getY() 
+																					 : v.getB().getY() - vOiseauObstacle.getB().getY();  
+					
+					double angleVOiseauObs = Math.atan( (oppose)/( vOiseauObstacle.getB().getX() - vOiseauObstacle.getA().getX()) );
+					double angleMax = angle < angleVOiseauObs ? angleVOiseauObs : angle;
+					double angleMin = angle > angleVOiseauObs ? angleVOiseauObs : angle;
+					
+					double tetha = 0;
+					
+					if(angleMax > 180) {
+						tetha = angleMax - angleMin;
+					}else {
+						tetha = angleMin + (360-angleMax);
+					}
+		
+					double distance = vOiseauObstacle.getNorme();
+													
+					if(tetha>180) {
+						angle = (float)(angle + 45);
+						vitesse = 25;
+					}
+				}
+		}
+
+		}else {
+			obstacle = false;
+		}
+			//On regarde ses 7 voisins
+			List<Bird> lVoisins = sky.getVoisins(getX(), getY());
+			
+			//On fait la moyenne des angles des voisins et du sien et on l'affecte à l'oiseau courant
+			float angleTot = angle;
+			for(Bird b : lVoisins) {
+				//System.out.println(lVoisins.size());
+				angleTot+=b.angle;
 			}
 			
+			angle = (angleTot/(lVoisins.size()+1))%360;		
+		
 	
-	        //On calcul la nouvelle position
-	        x = (x + (Math.sin(Math.toRadians(angle)) * deltaT));
-	        y = (y + (Math.cos(Math.toRadians(angle)) * deltaT));
-	        nbIter++;
+        //On calcul la nouvelle position
+        setX(getX() + (Math.sin(Math.toRadians(angle)) * deltaT));
+        setY(getY() - (Math.cos(Math.toRadians(angle)) * deltaT));
 	        
-	        /*
-	        System.out.println(	" X : " + x + 
-	        					" |  Y : " + y + 
-	        					" | angle : " + Math.toRadians(angle) +
-	        					" | deltaT" + deltaT);
-	        */
-	        
-	         isInConfort = sky.isInConfortZone(x,y);
-	         //System.out.println(isInConfort);
-		}while(isInConfort);
-
-
         
         tpsFin = System.currentTimeMillis();
         
         //Plateau fini non torique
  
-    	if(x > Sky.SIZE_FRAME/2) {
-        	x = -Sky.SIZE_FRAME/2;
+    	if(getX() > Sky.SIZE_FRAME) {
+    		setX(0);
         }
-        if(y > Sky.SIZE_FRAME/2) {
-        	y = -Sky.SIZE_FRAME/2;
+        if(getY() > Sky.SIZE_FRAME) {
+        	setY(0);
         }
             
 
         		
-        if(x < -Sky.SIZE_FRAME/2){
-        	x = Sky.SIZE_FRAME/2;
+        if(getX() < 0){
+        	setX(Sky.SIZE_FRAME);
         }
         
-        if(y < -Sky.SIZE_FRAME/2) {
-        	y = Sky.SIZE_FRAME/2;
+        if(getY() < 0) {
+        	setY(Sky.SIZE_FRAME);
         }
                 		
         
@@ -114,8 +149,12 @@ public class Bird extends FlyingObject {
        	
 	}
 	
+	private double produitScal(Vecteur v){
+		return getX() * v.getA().getX() + getY() * v.getA().getY();
+	}
+	
 	public String toString() {
-		return ""+x+':'+y+" | " + angle+'°';
+		return ""+getX()+':'+getY()+" | " + angle+'°';
 	}
 
 }

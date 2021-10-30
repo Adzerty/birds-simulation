@@ -12,7 +12,7 @@ import birds.metier.Bird;
 public class Sky extends JFrame {
 	
 	
-	public static final int SIZE_FRAME = 600;
+	public static final int SIZE_FRAME = 800;
 	
 	private PanelSky panel;
 	
@@ -53,7 +53,7 @@ public class Sky extends JFrame {
 		this.thdSimulation = new Thread(new Runnable() {
 			public void run() {
 				
-				while(true) {
+				while(true) {	
 					
 					panel.update();
 					
@@ -105,23 +105,21 @@ public class Sky extends JFrame {
 		return lVoisins;
 	}
 	
-	public boolean isInConfortZone(double x, double y) {
-		int sF = SIZE_FRAME/2;
+	public FlyingObject isInConfortZone(double x, double y, int size) {
 		for(FlyingObject fO : panel.flyingObjects) {
 			if(fO.getX() != x && fO.getY() != y) {
-				if(intersect(fO.getX()+sF, fO.getY()+sF, x+sF, y+sF, Bird.BIRD_SIZE/2, fO.getSize()/2)) 
+				if(intersect(x, y, fO.getX(), fO.getY(), size + (fO instanceof Bird ? Bird.CONFORT_ZONE : Bird.OBSTACLE_ZONE), fO.getSize()/2)) 
 				{	
-					return true;
+					return fO;
 				}				
 			
 			}
 		}
 		
-		return false;
+		return null;
 	}
 	
-	private boolean intersect(double x1, double y1, double x2,
-			double y2, int r1, int r2)
+	private boolean intersect(double x1, double y1, double x2, double y2, int r1, int r2)
 	{
 		double distSq = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
 		double radSumSq = (r1 + r2) * (r1 + r2);

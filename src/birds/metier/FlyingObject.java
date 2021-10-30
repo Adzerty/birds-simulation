@@ -3,29 +3,30 @@ package birds.metier;
 import birds.gui.Sky;
 
 public abstract class FlyingObject {
-	double x, y;
+	Vecteur v;
 	int size;
 	Sky sky;
 	
+	public Vecteur getV() {
+		return v;
+	}
 	public double getX() {
-		return x;
+		return v.getA().getX();
 	}
 	
 	public double getY() {
-		return y;
+		return v.getA().getY();
 	}
 	
 	public int getSize() {
 		return size;
 	}
 	
-	public void setX(double x) {
-		this.x = x;
-	}
+	public abstract void setX(double x);
 	
-	public void setY(double y) {
-		this.y = y;
-	}
+	public abstract void setY(double y);
+	
+	
 	
 	
 	public abstract void fly();

@@ -2,37 +2,47 @@ package birds.metier;
 
 public class Vecteur
 {
-    private double vX;
-    private double vY;
+    private Point a;
+    private Point b;
 
-    public Vecteur(double vX, double vY) {
-        this.vX = vX;
-        this.vY = vY;
+    public Vecteur(Point a, Point b) {
+    	this.a = a;
+    	this.b = b;
     }
 
-    public double getvX() {
-        return vX;
-    }
+    public Point getA() {
+		return a;
+	}
 
-    public void setvX(double vX) {
-        this.vX = vX;
-    }
 
-    public double getvY() {
-        return vY;
-    }
 
-    public void setvY(double vY) {
-        this.vY = vY;
-    }
+	public void setA(Point a) {
+		this.a = a;
+	}
 
-    public double getNorme()
+
+
+	public Point getB() {
+		return b;
+	}
+
+
+
+	public void setB(Point b) {
+		this.b = b;
+	}
+
+
+
+	public double getNorme()
     {
-        return Math.sqrt( (vX*vX) + (vY*vY) );
+        return Math.sqrt( (b.getX()-a.getX()) * (b.getX()-a.getX()) + (b.getY()-a.getY())*(b.getY()-a.getY()) );
     }
 
     public double calculNormeAvecDeuxValeurs(double x, double y){
         return Math.sqrt( (x*x) + (y*y) );
     }
+    
+   
 
 }

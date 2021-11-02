@@ -60,67 +60,67 @@ public class Bird extends FlyingObject {
 		
 
 		//On déplace l'oiseau
-		int nbIter = 0;
 		FlyingObject fOInConfort = sky.isInConfortZone(getX(), getY(), size);
 		vitesse = SPEED;
+		
+		double tetha = 0;
 		
 		if(fOInConfort != null){
 			if(fOInConfort instanceof Obstacle)
 			{
-				if(! obstacle)
-				{
-					obstacle = true;
-					// On trace le segment entre l'oiseau et l'obstacle
-					// On regarde l'angle entre la direction de l'oiseau et la droite
-					// Si l'angle est < à 90 on tourne de X degres (X = a * 1/longueur du segment)
-					//double tetha = v.getAngleBetweenVector(fOInConfort.getV());
-					
-					Vecteur vOiseauObstacle = new Vecteur(new Point(getX(), getY()), new Point(fOInConfort.getX(), fOInConfort.getY())); 
-					
-					double oppose = vOiseauObstacle.getB().getY() <  v.getB().getY() ? vOiseauObstacle.getB().getY() - v.getB().getY() 
-																					 : v.getB().getY() - vOiseauObstacle.getB().getY();  
-					
-					double angleVOiseauObs = Math.atan( (oppose)/( vOiseauObstacle.getB().getX() - vOiseauObstacle.getA().getX()) );
-					double angleMax = angle < angleVOiseauObs ? angleVOiseauObs : angle;
-					double angleMin = angle > angleVOiseauObs ? angleVOiseauObs : angle;
-					
-					double tetha = 0;
-					
-					if(angleMax > 180) {
-						tetha = angleMax - angleMin;
-					}else {
-						tetha = angleMin + (360-angleMax);
-					}
-		
-					double distance = vOiseauObstacle.getNorme();
-													
-					if(tetha>180) {
-						angle = (float)(angle + 45);
-						vitesse = 25;
-					}
+				// On trace le segment entre l'oiseau et l'obstacle
+				// On regarde l'angle entre la direction de l'oiseau et la droite
+				// Si l'angle est < à 90 on tourne de X degres (X = a * 1/longueur du segment)
+				//double tetha = v.getAngleBetweenVector(fOInConfort.getV());
+				
+				Vecteur vOiseauObstacle = new Vecteur(new Point(getX(), getY()), new Point(fOInConfort.getX(), fOInConfort.getY())); 
+				
+				double oppose = vOiseauObstacle.getB().getY() <  v.getB().getY() ? vOiseauObstacle.getB().getY() - v.getB().getY() 
+																				 : v.getB().getY() - vOiseauObstacle.getB().getY();  
+				
+				double angleVOiseauObs = Math.atan( (oppose)/( vOiseauObstacle.getB().getX() - vOiseauObstacle.getA().getX()) );
+				double angleMax = angle < angleVOiseauObs ? angleVOiseauObs : angle;
+				double angleMin = angle > angleVOiseauObs ? angleVOiseauObs : angle;
+				
+				
+				
+				if(angleMax > 180) {
+					tetha = angleMax - angleMin;
+				}else {
+					tetha = angleMin + (360-angleMax);
 				}
+	
+				double distance = vOiseauObstacle.getNorme();
+												
+				
+			}
 		}
-
-		}else {
-			obstacle = false;
-		}
+		
+		
+		if(tetha>90) {
+			angle = (float)tetha + 10;
+			//if(angle > 180) angle = 180;
+		} else
+		{
 			//On regarde ses 7 voisins
 			List<Bird> lVoisins = sky.getVoisins(getX(), getY());
 			
 			//On fait la moyenne des angles des voisins et du sien et on l'affecte à l'oiseau courant
-			float angleTot = angle;
+			float angleTot = angle*4; //L'angle de base de l'oiseau est plus fort
 			for(Bird b : lVoisins) {
 				//System.out.println(lVoisins.size());
 				angleTot+=b.angle;
 			}
 			
-			angle = (angleTot/(lVoisins.size()+1))%360;		
+			angle = (angleTot/(lVoisins.size()+4))%360;	
+		}
+			
 		
 	
         //On calcul la nouvelle position
         setX(getX() + (Math.sin(Math.toRadians(angle)) * deltaT));
         setY(getY() - (Math.cos(Math.toRadians(angle)) * deltaT));
-	        
+        	        
         
         tpsFin = System.currentTimeMillis();
         

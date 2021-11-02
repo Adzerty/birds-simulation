@@ -32,8 +32,8 @@ public class PanelSky extends JPanel {
 		}
 		
 		for(int i = 0; i<s.getNbObstacles(); i++) {
-			flyingObjects.add(new Obstacle( (int)(Math.random() * spawnObs), 
-											(int)(Math.random() * spawnObs),
+			flyingObjects.add(new Obstacle( spawnObs/2, 
+											spawnObs/2,
 											(Obstacle.SIZE_MIN +  (int)(Math.random() * (Obstacle.SIZE_MAX - Obstacle.SIZE_MIN))),
 											s));
 		}

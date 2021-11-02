@@ -119,7 +119,7 @@ public class Sky extends JFrame {
 		return null;
 	}
 	
-	private boolean intersect(double x1, double y1, double x2, double y2, int r1, int r2)
+	public boolean intersect(double x1, double y1, double x2, double y2, int r1, int r2)
 	{
 		double distSq = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
 		double radSumSq = (r1 + r2) * (r1 + r2);
